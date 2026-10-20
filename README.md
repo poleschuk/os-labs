@@ -111,3 +111,23 @@ IMAGE          CREATED          CREATED BY                                      
 8. **`LABEL` через `--build-arg`.** Пара `org.lab.login` / `org.lab.token` позволяет однозначно идентифицировать сборку, а сами значения не хардкодятся в Dockerfile — образ пересобирается под другой seed одной командой без правки файла.
 
 ---
+
+## Проверка на read-only
+
+```text
+/app $ ls
+app.py
+/app $ touch app.py
+touch: app.py: Read-only file system
+/app $
+```
+
+##  Healthcheck
+```text
+PS C:\Engineering\study\os\lab2> curl.exe -s http://localhost:8080/health;
+{"status":"ok","uptime":1648.28}
+PS C:\Engineering\study\os\lab2> curl.exe -s http://localhost:8080;       
+Hello from Docker! Rocket=Big
+PS C:\Engineering\study\os\lab2> 
+```
+---
