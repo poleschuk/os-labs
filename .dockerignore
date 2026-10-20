@@ -1,0 +1,9 @@
+seed-*.json
+__pycache__/
+*.pyc
+*.log
+.git
+.env
+.vscode
+.idea
+.DS_Stores
