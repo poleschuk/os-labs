@@ -37,11 +37,6 @@ LABEL org.lab.login="${LAB_LOGIN}" \
       org.opencontainers.image.description="Prod Flask image for lab"
 
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    ROCKET_SIZE=Normal
-
 RUN addgroup -S app && adduser -S -G app -u 10001 app
 
 WORKDIR /app
@@ -106,7 +101,7 @@ IMAGE          CREATED          CREATED BY                                      
 3. **Non-root пользователь `app` (UID 10001).** Даже если процесс Flask/gunicorn скомпрометирован, атакующий получит урезанные права внутри контейнера. Наивный образ обычно работает под root.
 4. **`HEALTHCHECK` на `/health`.** Docker сам опрашивает эндпоинт и помечает контейнер как `unhealthy`, если тот «залип». Это даёт оркестратору сигнал на перезапуск, чего в наивной сборке нет вовсе.
 5. **`exec`-форма `CMD` с gunicorn.** Gunicorn запускается как PID 1 и получает `SIGTERM` напрямую, выполняет graceful shutdown за ~1–2 секунды. Наивный `CMD python app.py` либо не обрабатывает сигнал, либо завершается по таймауту `docker stop` (10 с).
-6. **Совместимость с `--read-only`.** Благодаря `PYTHONDONTWRITEBYTECODE=1` Python не пытается писать `.pyc`, а `--worker-tmp-dir /dev/shm` уводит временные файлы gunicorn в `tmpfs`. Наивный образ с `.pyc`-записью при `--read-only` упадёт на первом же импорте.
+6. **Совместимость с `--read-only`.** `--worker-tmp-dir /dev/shm` уводит временные файлы gunicorn в `tmpfs`.
 7. **Конфиг через `ENV` без пересборки.** `ROCKET_SIZE` читается на старте процесса — один и тот же образ подходит для dev/staging/prod с разными значениями, не нужно собирать отдельный образ на каждое окружение.
 8. **`LABEL` через `--build-arg`.** Пара `org.lab.login` / `org.lab.token` позволяет однозначно идентифицировать сборку, а сами значения не хардкодятся в Dockerfile — образ пересобирается под другой seed одной командой без правки файла.
 

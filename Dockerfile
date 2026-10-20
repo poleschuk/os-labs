@@ -16,11 +16,6 @@ LABEL org.lab.login="${LAB_LOGIN}" \
       org.opencontainers.image.description="Prod Flask image for lab"
 
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    ROCKET_SIZE=Normal
-
 RUN addgroup -S app && adduser -S -G app -u 10001 app
 
 WORKDIR /app
