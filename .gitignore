@@ -1,0 +1,4 @@
+.git
+.venv/
+.dockerignore
+seed-*.json
